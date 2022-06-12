@@ -4,5 +4,10 @@
   "main": "index.js",
   "repository": "__",
   "author": "Akshay Nair <phenax5@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "elm": "^0.19.1-5",
+    "esbuild": "^0.14.43",
+    "esbuild-plugin-elm": "^0.0.10"
+  }
 }
