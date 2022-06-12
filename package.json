@@ -1,0 +1,8 @@
+{
+  "name": "elm-desktop",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "__",
+  "author": "Akshay Nair <phenax5@gmail.com>",
+  "license": "MIT"
+}
