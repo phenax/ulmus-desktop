@@ -1,11 +1,11 @@
 {
-  "name": "elm-desktop",
+  "name": "ulmus-desktop",
   "version": "0.0.0",
-  "main": "index.js",
   "repository": "__",
   "author": "Akshay Nair <phenax5@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "electron": "^19.0.4",
     "elm": "^0.19.1-5",
     "esbuild": "^0.14.43",
     "esbuild-plugin-elm": "^0.0.10"

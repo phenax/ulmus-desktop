@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Client exposing (..)
 
 import Html exposing (Html)
 import Ulmus
