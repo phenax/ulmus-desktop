@@ -1,4 +1,4 @@
-module Client exposing (..)
+module Renderer exposing (..)
 
 import Browser exposing (Document)
 import Browser.Navigation as Navigation

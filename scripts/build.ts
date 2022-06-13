@@ -9,29 +9,26 @@ const buildClient = () => esbuild.build({
   bundle: true,
   watch: false,
   define: {
-    'process.env.MAIN': JSON.stringify('../example/src/Client.elm'),
+    'process.env.MAIN': JSON.stringify('../example/src/Renderer.elm'),
   },
   plugins: [
-    ElmPlugin({
-      clearOnWatch: true,
-    }),
+    ElmPlugin(),
   ],
 })
 
 const buildWorker = () => esbuild.build({
   entryPoints: ['src/app.ts'],
   outdir: 'dist/',
-  bundle: false,
+  bundle: true,
   watch: false,
   platform: 'node',
   format: 'cjs',
+  external: ['electron'],
   define: {
-    // 'process.env.MAIN': JSON.stringify('../example/src/Client.elm'),
+    'process.env.MAIN': JSON.stringify('../example/src/App.elm'),
   },
   plugins: [
-    ElmPlugin({
-      clearOnWatch: true,
-    }),
+    ElmPlugin(),
   ],
 })
 

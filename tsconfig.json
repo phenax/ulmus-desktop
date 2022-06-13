@@ -4,7 +4,7 @@
 
     "incremental": true,
     "target": "es2016",
-    "lib": ["dom", "esnext", "node"],
+    "lib": ["dom", "esnext"],
 
     "module": "esnext",
     "rootDir": "./",

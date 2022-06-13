@@ -5,9 +5,11 @@ import { app, session, BrowserWindow } from 'electron'
 const HOST = 'ulmus-app'
 const SCHEME = 'http'
 const ORIGIN = `${SCHEME}://${HOST}`
-const ulmusUrl = (p: string = '') => `${ORIGIN}/${p}`
+const ulmusUrl = (p: string = '') => `${ORIGIN}/${p.replace(/^\/*/g, '')}`
 
-const createWindow = async () => {
+type WindowConfig = { path?: string }
+
+const createWindow = async (w: WindowConfig) => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -18,11 +20,16 @@ const createWindow = async () => {
     }
   })
 
-  await mainWindow.loadURL(ulmusUrl())
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  await mainWindow.loadURL(ulmusUrl(w.path))
 }
+
+const initProcess = async () => {
+  const { Elm } = await import(process.env.MAIN as string)
+  const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
+  const app = Main.init()
+  app.ports.createWindow.subscribe(createWindow)
+  console.log(app)
+};
 
 const initializeProtocol = () => {
   const publicDirectory = path.join(__dirname, '../dist/')
@@ -47,13 +54,13 @@ const initializeProtocol = () => {
   })
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   initializeProtocol()
+  await initProcess()
 
-  createWindow()
   app.on('activate', () => {
-    // MacOS
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    // For macOS
+    if (BrowserWindow.getAllWindows().length === 0) createWindow({ path: '/' })
   })
 })
 
