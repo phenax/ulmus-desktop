@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "ts-node scripts/build.ts",
-    "start": "electron ./dist/app.js"
+    "example": "electron ./example/dist/app.js"
   },
   "dependencies": {
     "electron": "^19.0.4",

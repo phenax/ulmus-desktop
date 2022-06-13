@@ -5,7 +5,6 @@ import { app, session, BrowserWindow } from 'electron'
 const HOST = 'ulmus-app'
 const SCHEME = 'http'
 const ORIGIN = `${SCHEME}://${HOST}`
-const ulmusUrl = (p: string = '') => `${ORIGIN}/${p.replace(/^\/*/g, '')}`
 
 type WindowConfig = { path?: string }
 
@@ -16,11 +15,10 @@ const createWindow = async (w: WindowConfig) => {
     height: 600,
     webPreferences: {
       contextIsolation: true,
-      // preload: path.join(__dirname, 'preload.js')
     }
   })
 
-  await mainWindow.loadURL(ulmusUrl(w.path))
+  await mainWindow.loadURL(`${ORIGIN}/${w.path?.replace(/^\/*/g, '') || ''}`)
 }
 
 const initProcess = async () => {
@@ -32,14 +30,14 @@ const initProcess = async () => {
 };
 
 const initializeProtocol = () => {
-  const publicDirectory = path.join(__dirname, '../example/dist/renderer')
+  const publicDir = process.env.PUBLIC_DIR as string
 
   session.defaultSession.protocol.interceptStreamProtocol('http', async (request, callback) => {
     const url = new URL(request.url)
 
     if (url.origin === ORIGIN) {
-      const indexPath = path.join(publicDirectory, 'index.html');
-      const filePath = path.join(publicDirectory, decodeURIComponent(url.pathname))
+      const indexPath = path.join(publicDir, 'index.html');
+      const filePath = path.join(publicDir, decodeURIComponent(url.pathname))
       const stat = await fs.stat(filePath)
 
       if (stat.isFile()) {

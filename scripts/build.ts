@@ -42,6 +42,7 @@ const buildApp = () => esbuild.build({
   absWorkingDir: cwd,
   define: {
     'process.env.MAIN': JSON.stringify(paths.app),
+    'process.env.PUBLIC_DIR': JSON.stringify(distRenderer),
   },
   plugins: [
     ElmPlugin({
