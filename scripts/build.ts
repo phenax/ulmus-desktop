@@ -4,7 +4,7 @@ const esbuild = require('esbuild')
 const ElmPlugin = require('esbuild-plugin-elm')
 
 const buildClient = () => esbuild.build({
-  entryPoints: ['src/client.js'],
+  entryPoints: ['src/client.ts'],
   outdir: 'dist/',
   bundle: true,
   watch: false,
@@ -19,7 +19,7 @@ const buildClient = () => esbuild.build({
 })
 
 const buildWorker = () => esbuild.build({
-  entryPoints: ['src/app.js'],
+  entryPoints: ['src/app.ts'],
   outdir: 'dist/',
   bundle: false,
   watch: false,

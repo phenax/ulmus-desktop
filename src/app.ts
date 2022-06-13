@@ -1,10 +1,11 @@
 import { promises as fs, createReadStream } from 'fs'
 import path from 'path'
 import { app, session, BrowserWindow } from 'electron'
-import http from 'http'
-import util from 'util'
 
-const scheme = 'ulmus'
+const HOST = 'ulmus-app'
+const SCHEME = 'http'
+const ORIGIN = `${SCHEME}://${HOST}`
+const ulmusUrl = (p: string = '') => `${ORIGIN}/${p}`
 
 const createWindow = async () => {
   // Create the browser window.
@@ -17,7 +18,7 @@ const createWindow = async () => {
     }
   })
 
-  await mainWindow.loadURL(`http://localhost/`)
+  await mainWindow.loadURL(ulmusUrl())
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
@@ -29,7 +30,7 @@ const initializeProtocol = () => {
   session.defaultSession.protocol.interceptStreamProtocol('http', async (request, callback) => {
     const url = new URL(request.url)
 
-    if (url.origin === 'http://localhost') {
+    if (url.origin === ORIGIN) {
       const indexPath = path.join(publicDirectory, 'index.html');
       const filePath = path.join(publicDirectory, decodeURIComponent(url.pathname))
       const stat = await fs.stat(filePath)
@@ -40,6 +41,7 @@ const initializeProtocol = () => {
         callback(createReadStream(indexPath))
       }
     } else {
+      // TODO: Load in as http stream (with validation?)
       callback({ error: -6 })
     }
   })
