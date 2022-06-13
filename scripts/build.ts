@@ -1,6 +1,7 @@
-const path = require('path')
-const { promises: fs } = require('fs')
-const esbuild = require('esbuild')
+import path from 'path'
+import { promises as fs } from 'fs'
+import esbuild from 'esbuild'
+
 const ElmPlugin = require('esbuild-plugin-elm')
 
 const cwdRelative = '../example'
@@ -12,6 +13,7 @@ const distRenderer = path.join(dist, 'renderer')
 const paths = {
   renderer: path.join(cwdRelative, 'src/Renderer.elm'),
   app: path.join(cwdRelative, 'src/App.elm'),
+  ipcTypes: path.join(cwdRelative, 'src/IPC.elm'),
 }
 
 const buildRenderer = () => esbuild.build({

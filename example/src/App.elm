@@ -1,5 +1,6 @@
 module App exposing (..)
 
+import IPC exposing (MainMsg, RendererMsg)
 import Ulmus.Server
 
 

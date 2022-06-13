@@ -1,6 +1,7 @@
 port module Ulmus.Server exposing (..)
 
 import Platform
+import Ulmus.IPC exposing (Receiver, Sender)
 
 
 port createWindow : Window -> Cmd msg

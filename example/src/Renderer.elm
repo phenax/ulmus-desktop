@@ -3,13 +3,15 @@ module Renderer exposing (..)
 import Browser exposing (Document)
 import Browser.Navigation as Navigation
 import Html
-import Ulmus
+import IPC exposing (MainMsg, RendererMsg)
+import Ulmus.IPC exposing (Receiver, Sender)
+import Ulmus.Renderer
 import Url
 
 
 main : Program Flags Model Msg
 main =
-    Ulmus.makeClientApplication
+    Ulmus.Renderer.makeRenderer
         { view = view
         , update = update
         , init = init
