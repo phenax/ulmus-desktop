@@ -1,4 +1,5 @@
 const path = require('path')
+const { promises: fs } = require('fs')
 const esbuild = require('esbuild')
 const ElmPlugin = require('esbuild-plugin-elm')
 
@@ -34,6 +35,10 @@ const buildWorker = () => esbuild.build({
   ],
 })
 
-Promise.all([buildClient(), buildWorker()])
+const copyFiles = () => Promise.all([
+  fs.copyFile('./src/index.html', './dist/index.html'),
+])
+
+Promise.all([buildClient(), buildWorker(), copyFiles()])
   .catch(e => (console.error(e), process.exit(1)))
 

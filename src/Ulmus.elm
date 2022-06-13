@@ -1,6 +1,7 @@
 module Ulmus exposing (..)
 
+import Browser
 
-foo : Int
-foo =
-    5
+
+makeClientApplication =
+    Browser.application
