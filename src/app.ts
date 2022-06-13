@@ -32,7 +32,7 @@ const initProcess = async () => {
 };
 
 const initializeProtocol = () => {
-  const publicDirectory = path.join(__dirname, '../dist/')
+  const publicDirectory = path.join(__dirname, '../example/dist/renderer')
 
   session.defaultSession.protocol.interceptStreamProtocol('http', async (request, callback) => {
     const url = new URL(request.url)

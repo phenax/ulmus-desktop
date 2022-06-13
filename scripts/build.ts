@@ -3,39 +3,61 @@ const { promises: fs } = require('fs')
 const esbuild = require('esbuild')
 const ElmPlugin = require('esbuild-plugin-elm')
 
-const buildClient = () => esbuild.build({
-  entryPoints: ['src/client.ts'],
-  outdir: 'dist/',
+const cwdRelative = '../example'
+const cwd = path.join(__dirname, cwdRelative)
+
+const dist = path.join(cwd, 'dist')
+const distRenderer = path.join(dist, 'renderer')
+
+const paths = {
+  renderer: path.join(cwdRelative, 'src/Renderer.elm'),
+  app: path.join(cwdRelative, 'src/App.elm'),
+}
+
+const buildRenderer = () => esbuild.build({
+  entryPoints: [path.join(__dirname, '../src/renderer.ts')],
+  outdir: distRenderer,
   bundle: true,
   watch: false,
+  absWorkingDir: cwd,
   define: {
-    'process.env.MAIN': JSON.stringify('../example/src/Renderer.elm'),
+    'process.env.MAIN': JSON.stringify(paths.renderer),
   },
   plugins: [
-    ElmPlugin(),
+    ElmPlugin({
+      cwd,
+      pathToElm: 'elm',
+    }),
   ],
 })
 
-const buildWorker = () => esbuild.build({
-  entryPoints: ['src/app.ts'],
-  outdir: 'dist/',
+const buildApp = () => esbuild.build({
+  entryPoints: [path.join(__dirname, '../src/app.ts')],
+  outdir: dist,
   bundle: true,
   watch: false,
   platform: 'node',
   format: 'cjs',
   external: ['electron'],
+  absWorkingDir: cwd,
   define: {
-    'process.env.MAIN': JSON.stringify('../example/src/App.elm'),
+    'process.env.MAIN': JSON.stringify(paths.app),
   },
   plugins: [
-    ElmPlugin(),
+    ElmPlugin({
+      cwd,
+      pathToElm: 'elm',
+    }),
   ],
 })
 
-const copyFiles = () => Promise.all([
-  fs.copyFile('./src/index.html', './dist/index.html'),
-])
+const main = async () => {
+  await Promise.all([buildRenderer(), buildApp()])
+  await Promise.all([
+    fs.copyFile('./src/index.html', path.join(distRenderer, 'index.html')),
+  ])
+}
 
-Promise.all([buildClient(), buildWorker(), copyFiles()])
+main()
   .catch(e => (console.error(e), process.exit(1)))
 
