@@ -1,8 +1,8 @@
 import path from 'path'
 import { promises as fs } from 'fs'
-import esbuild from 'esbuild'
-
-const ElmPlugin = require('esbuild-plugin-elm')
+import esbuild, { BuildOptions } from 'esbuild'
+// @ts-ignore
+import ElmPlugin from 'esbuild-plugin-elm'
 
 const cwdRelative = '../example'
 const cwd = path.join(__dirname, cwdRelative)
@@ -16,42 +16,47 @@ const paths = {
   ipcTypes: path.join(cwdRelative, 'src/IPC.elm'),
 }
 
-const buildRenderer = () => esbuild.build({
-  entryPoints: [path.join(__dirname, '../src/renderer.ts')],
+const bundle = ({
+  entryPoint,
+  elmConfig,
+  ...config
+}: {
+  entryPoint: string,
+  elmConfig?: any
+} & BuildOptions) =>
+  esbuild.build({
+    entryPoints: [entryPoint],
+    bundle: true,
+    watch: false,
+    external: ['electron'],
+    absWorkingDir: cwd,
+    plugins: [
+      ElmPlugin({
+        cwd,
+        pathToElm: 'elm',
+        ...elmConfig,
+      }),
+    ],
+    ...config,
+  })
+
+const buildRenderer = () => bundle({
+  entryPoint: path.join(__dirname, '../src/renderer.ts'),
   outdir: distRenderer,
-  bundle: true,
-  watch: false,
-  absWorkingDir: cwd,
   define: {
     'process.env.MAIN': JSON.stringify(paths.renderer),
   },
-  plugins: [
-    ElmPlugin({
-      cwd,
-      pathToElm: 'elm',
-    }),
-  ],
 })
 
-const buildApp = () => esbuild.build({
-  entryPoints: [path.join(__dirname, '../src/app.ts')],
+const buildApp = () => bundle({
+  entryPoint: path.join(__dirname, '../src/app.ts'),
   outdir: dist,
-  bundle: true,
-  watch: false,
   platform: 'node',
   format: 'cjs',
-  external: ['electron'],
-  absWorkingDir: cwd,
   define: {
     'process.env.MAIN': JSON.stringify(paths.app),
     'process.env.PUBLIC_DIR': JSON.stringify(distRenderer),
   },
-  plugins: [
-    ElmPlugin({
-      cwd,
-      pathToElm: 'elm',
-    }),
-  ],
 })
 
 const main = async () => {
