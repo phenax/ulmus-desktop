@@ -1,8 +1,9 @@
 module IPC exposing (..)
 
 import Json.Decode exposing (Decoder, oneOf)
-import Json.Decode.Pipeline exposing (custom, required)
-import Ulmus.Server exposing (decodeWindow)
+import Json.Decode.Pipeline exposing (required)
+import Json.Encode as Enc
+import Ulmus.Json exposing (decodeWindow, encodeWindow)
 import Ulmus.Types exposing (Window)
 
 
@@ -25,10 +26,26 @@ decodeAsType name =
             )
 
 
-decodeVariant : String -> (a -> b) -> Json.Decode.Decoder (a -> b)
+decodeVariant : String -> a -> Json.Decode.Decoder a
 decodeVariant kind fn =
     decodeAsType kind
         |> Json.Decode.map (\_ -> fn)
+
+
+encodeRendererMsg : RendererMsg -> Enc.Value
+encodeRendererMsg msg =
+    case msg of
+        LogMessage text ->
+            Enc.object
+                [ ( "type", Enc.string "LogMessage" )
+                , ( "message", Enc.string text )
+                ]
+
+        OpenInWindow window ->
+            Enc.object
+                [ ( "type", Enc.string "OpenInWindow" )
+                , ( "message", encodeWindow window )
+                ]
 
 
 decodeRendererMsg : Json.Decode.Decoder RendererMsg
@@ -40,13 +57,18 @@ decodeRendererMsg =
 
 
 type MainMsg
-    = Foobar String Int
+    = NoopMain
 
 
 decodeMainMsg : Json.Decode.Decoder MainMsg
 decodeMainMsg =
     oneOf
-        [ decodeVariant "Foobar" Foobar
-            |> custom Json.Decode.string
-            |> custom Json.Decode.int
+        [ decodeVariant "Foobar" NoopMain
         ]
+
+
+encodeMainMsg : MainMsg -> Enc.Value
+encodeMainMsg msg =
+    case msg of
+        NoopMain ->
+            Enc.object [ ( "type", Enc.string "Noop" ) ]
