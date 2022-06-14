@@ -26,6 +26,11 @@ const initProcess = async () => {
   const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
   const app = Main.init()
   app.ports.createWindow.subscribe(createWindow)
+
+  setTimeout(() => {
+    app.ports.receive.send({ type: 'LogMessage', message: 'Hello world foooo' })
+  }, 1000)
+
   console.log(app)
 };
 

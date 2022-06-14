@@ -1,6 +1,8 @@
 module App exposing (..)
 
-import IPC exposing (MainMsg, RendererMsg)
+import IPC exposing (MainMsg, RendererMsg, decodeRendererMsg)
+import Json.Decode
+import Ulmus.IPC exposing (receive)
 import Ulmus.Server
 
 
@@ -14,6 +16,7 @@ type alias Model =
 
 type Msg
     = UlmusMsg Ulmus.Server.Msg
+    | GotRendererMsg (Result Json.Decode.Error RendererMsg)
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -38,10 +41,20 @@ update msg model =
             in
             ( { ulmusModel = uModel }, Cmd.map UlmusMsg cmd )
 
+        GotRendererMsg m ->
+            let
+                _ =
+                    Debug.log "from renderer" m
+            in
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.map UlmusMsg <| Ulmus.Server.subscriptions model.ulmusModel
+    Sub.batch
+        [ Sub.map UlmusMsg <| Ulmus.Server.subscriptions model.ulmusModel
+        , receive (GotRendererMsg << Json.Decode.decodeValue decodeRendererMsg)
+        ]
 
 
 main : Program Flags Model Msg

@@ -1,14 +1,18 @@
 port module Ulmus.Server exposing (..)
 
+import Json.Decode
+import Json.Decode.Pipeline exposing (required)
 import Platform
-import Ulmus.IPC exposing (Receiver, Sender)
+import Ulmus.Types exposing (..)
 
 
 port createWindow : Window -> Cmd msg
 
 
-type alias Window =
-    { path : String }
+
+decodeWindow : Json.Decode.Decoder Window
+decodeWindow =
+    Json.Decode.succeed Window |> required "path" Json.Decode.string
 
 
 type alias Model =
