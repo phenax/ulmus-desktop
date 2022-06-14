@@ -7,7 +7,7 @@ import Ulmus.Json exposing (decodeWindow, encodeWindow)
 import Ulmus.Types exposing (Window)
 
 
-type RendererMsg
+type FromRendererMsg
     = OpenInWindow Window
     | LogMessage String
 
@@ -32,7 +32,7 @@ decodeVariant kind fn =
         |> Json.Decode.map (\_ -> fn)
 
 
-encodeRendererMsg : RendererMsg -> Enc.Value
+encodeRendererMsg : FromRendererMsg -> Enc.Value
 encodeRendererMsg msg =
     case msg of
         LogMessage text ->
@@ -44,11 +44,11 @@ encodeRendererMsg msg =
         OpenInWindow window ->
             Enc.object
                 [ ( "type", Enc.string "OpenInWindow" )
-                , ( "message", encodeWindow window )
+                , ( "window", encodeWindow window )
                 ]
 
 
-decodeRendererMsg : Json.Decode.Decoder RendererMsg
+decodeRendererMsg : Json.Decode.Decoder FromRendererMsg
 decodeRendererMsg =
     oneOf
         [ decodeVariant "LogMessage" LogMessage |> required "message" Json.Decode.string
@@ -56,18 +56,18 @@ decodeRendererMsg =
         ]
 
 
-type MainMsg
+type FromMainMsg
     = NoopMain
 
 
-decodeMainMsg : Json.Decode.Decoder MainMsg
+decodeMainMsg : Json.Decode.Decoder FromMainMsg
 decodeMainMsg =
     oneOf
         [ decodeVariant "Foobar" NoopMain
         ]
 
 
-encodeMainMsg : MainMsg -> Enc.Value
+encodeMainMsg : FromMainMsg -> Enc.Value
 encodeMainMsg msg =
     case msg of
         NoopMain ->

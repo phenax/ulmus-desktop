@@ -1,6 +1,6 @@
 import { promises as fs, createReadStream } from 'fs'
 import path from 'path'
-import { app, session, BrowserWindow } from 'electron'
+import { app, session, BrowserWindow, ipcMain } from 'electron'
 
 const HOST = 'ulmus-app'
 const SCHEME = 'http'
@@ -15,6 +15,7 @@ const createWindow = async (w: WindowConfig) => {
     height: 600,
     webPreferences: {
       contextIsolation: true,
+      preload: path.join(__dirname, 'renderer/preload.js'),
     }
   })
 
@@ -24,14 +25,12 @@ const createWindow = async (w: WindowConfig) => {
 const initProcess = async () => {
   const { Elm } = await import(process.env.MAIN as string)
   const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
+
   const app = Main.init()
-  app.ports.createWindow.subscribe(createWindow)
-
-  setTimeout(() => {
-    app.ports.receive.send({ type: 'LogMessage', message: 'Hello world foooo' })
-  }, 1000)
-
   console.log(app)
+
+  ipcMain.on('to-main', (event: any, msg: any) => app.ports.receive.send(msg))
+  app.ports.send.subscribe((msg: any) => ipcMain.emit('from-main', msg))
 };
 
 const initializeProtocol = () => {

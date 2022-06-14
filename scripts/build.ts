@@ -40,6 +40,11 @@ const bundle = ({
     ...config,
   })
 
+const buildPreload = () => bundle({
+  entryPoint: path.join(__dirname, '../src/preload.ts'),
+  outdir: distRenderer,
+})
+
 const buildRenderer = () => bundle({
   entryPoint: path.join(__dirname, '../src/renderer.ts'),
   outdir: distRenderer,
@@ -60,7 +65,7 @@ const buildApp = () => bundle({
 })
 
 const main = async () => {
-  await Promise.all([buildRenderer(), buildApp()])
+  await Promise.all([buildRenderer(), buildApp(), buildPreload()])
   await Promise.all([
     fs.copyFile('./src/index.html', path.join(distRenderer, 'index.html')),
   ])

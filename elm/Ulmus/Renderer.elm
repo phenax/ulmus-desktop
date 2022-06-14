@@ -2,7 +2,6 @@ module Ulmus.Renderer exposing (..)
 
 import Browser
 import Browser.Navigation
-import Ulmus.IPC exposing (Receiver, Sender)
 import Url
 
 

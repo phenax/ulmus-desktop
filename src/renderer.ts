@@ -8,8 +8,12 @@ import(process.env.MAIN as string).then(async ({ Elm }) => {
     throw new Error(`Invalid module. Expected elm module ${process.env.MAIN}`)
   }
 
-  Main.init({
-    node: $root,
-  })
+  const app = Main.init({ node: $root });
+
+  const $ulmus: any = (window as any).$ulmus
+  if ($ulmus) {
+    $ulmus.receive((msg: any) => app.ports.receive.send(msg))
+    app.ports.send.subscribe((msg: any) => $ulmus.send(msg))
+  }
 })
 
