@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig to read more about this file */
-
     "incremental": true,
     "target": "esnext",
     "lib": ["dom", "esnext"],
 
     "module": "esnext",
-    "rootDir": "./",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "~dist/*": ["dist/*"]
+    },
     "moduleResolution": "node",
     "resolveJsonModule": true,
 
