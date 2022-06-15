@@ -29,7 +29,7 @@ type alias Model =
 
 type Msg
     = Noop
-    | SendMainMsg FromRendererMsg
+    | SendToMain FromRendererMsg
     | GotMainMsg (Result Json.Decode.Error FromMainMsg)
 
 
@@ -45,7 +45,7 @@ init _ _ _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SendMainMsg m ->
+        SendToMain m ->
             ( model, send <| encodeRendererMsg <| m )
 
         _ ->
@@ -56,7 +56,7 @@ view : Model -> Document Msg
 view _ =
     { title = "Title"
     , body =
-        [ Html.button [ onClick <| SendMainMsg <| LogMessage "Doing stuff" ] [ Html.text "Go" ]
+        [ Html.button [ onClick <| SendToMain <| LogMessage "Doing stuff" ] [ Html.text "Go" ]
         , Html.text "wow"
         ]
     }

@@ -29,6 +29,8 @@ const initProcess = async () => {
   const app = Main.init()
   console.log(app)
 
+  await createWindow({ path: '/' })
+
   ipcMain.on('to-main', (event: any, msg: any) => app.ports.receive.send(msg))
   app.ports.send.subscribe((msg: any) => ipcMain.emit('from-main', msg))
 };
