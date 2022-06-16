@@ -21,6 +21,7 @@ export const build = async () => {
       define: {
         'process.env.MAIN': JSON.stringify(config.paths.main),
         'process.env.PUBLIC_DIR': JSON.stringify(distRenderer),
+        'process.env.JS_MODULE': JSON.stringify(config.paths['js:main'] || ''),
       },
     }),
     bundle({

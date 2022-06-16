@@ -32,12 +32,26 @@ const initApi = (app: any) => {
   app.ports.createWindow?.subscribe?.(createWindow)
 }
 
+const getHooks = async () => {
+  const defaultHooks = { getFlags: () => ({}), setup() { } }
+
+  if (process.env.JS_MODULE) {
+    const jsMod = await import(process.env.JS_MODULE)
+    return { ...defaultHooks, ...jsMod.default }
+  }
+
+  return defaultHooks
+}
+
 const initProcess = async () => {
+  const hooks = await getHooks()
+
   const { Elm } = await import(process.env.MAIN as string)
   const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
 
-  const app = Main.init()
-  console.log(app)
+  const app = Main.init({
+    flags: await hooks.getFlags(),
+  })
 
   initApi(app)
 
@@ -50,6 +64,8 @@ const initProcess = async () => {
       console.error('Main process is not listening for messages')
     }
   })
+
+  hooks.setup(app)
 };
 
 const initializeProtocol = () => {
