@@ -4,7 +4,7 @@ import { promises as fs } from 'fs'
 export type Config = {
   root: string,
   outdir: string,
-  files: {
+  paths: {
     main: string,
     renderer: string,
     'js:main'?: string,
@@ -27,10 +27,10 @@ export const fetchConfig = async (cwd: string, currentSrc: string): Promise<Conf
 
   const cfg = JSON.parse(file) as unknown as Config
 
-  if (!cfg.files?.main || !cfg.files?.renderer) {
+  if (!cfg.paths?.main || !cfg.paths?.renderer) {
     const missingFiles = [
-      cfg.files?.main && 'file.main',
-      cfg.files?.renderer && 'file.renderer',
+      cfg.paths?.main && 'file.main',
+      cfg.paths?.renderer && 'file.renderer',
     ]
       .filter(Boolean)
       .join(' and ')
@@ -41,13 +41,13 @@ export const fetchConfig = async (cwd: string, currentSrc: string): Promise<Conf
   cfg.root = path.join(cwd, cfg.root || '.')
   cfg.outdir = path.join(cfg.root, cfg.outdir || 'dist')
 
-  cfg.files = Object.fromEntries(
-    Object.entries(cfg.files || {})
+  cfg.paths = Object.fromEntries(
+    Object.entries(cfg.paths || {})
       .map(([key, file]) => [
         key,
         path.relative(currentSrc, path.join(cfg.root, file))
       ])
-  ) as Config['files']
+  ) as Config['paths']
 
   return cfg
 }

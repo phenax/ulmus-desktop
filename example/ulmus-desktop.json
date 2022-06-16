@@ -1,7 +1,7 @@
 {
     "root": ".",
     "outdir": "dist",
-    "files": {
+    "paths": {
         "main": "src/App.elm",
         "renderer": "src/Renderer.elm"
     }
