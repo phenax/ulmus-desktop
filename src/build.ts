@@ -4,13 +4,11 @@ import { bundle } from './utils/build'
 import { fetchConfig } from './utils/config'
 
 const main = async () => {
-  const cwd = `${process.cwd()}/example`
+  const cwd = process.cwd()
 
   const config = await fetchConfig(cwd, __dirname)
   const dist = config.outdir
   const distRenderer = path.join(config.outdir, 'renderer')
-
-  console.log(config)
 
   await Promise.all([
     bundle({

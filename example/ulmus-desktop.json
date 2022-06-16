@@ -1,10 +1,8 @@
 {
     "root": ".",
+    "outdir": "dist",
     "files": {
         "main": "src/App.elm",
-        "renderer": "src/Renderer.elm",
-        "js:main": "src/main.js",
-        "js:renderer": "src/renderer.js",
-        "js:preload": "src/preload.js"
+        "renderer": "src/Renderer.elm"
     }
 }

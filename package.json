@@ -5,8 +5,8 @@
   "author": "Akshay Nair <phenax5@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "ts-node --cwd example ../src/build.ts",
-    "example": "electron ./example/dist/app.js",
+    "build": "cd example && ts-node ../src/build.ts",
+    "example": "cd example && ts-node ../src/run.ts",
     "test:elm": "elm-test tests/Elm/**/*.elm",
     "test:ts": "jest"
   },
