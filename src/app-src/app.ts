@@ -1,6 +1,11 @@
 import { promises as fs, createReadStream } from 'fs'
 import path from 'path'
 import { app, session, BrowserWindow, ipcMain } from 'electron'
+// @ts-ignore
+import XMLHttpRequest from 'xhr2'
+
+// Polyfill for elm/http
+global.XMLHttpRequest = XMLHttpRequest
 
 const HOST = 'ulmus-app'
 const SCHEME = 'http'
@@ -23,7 +28,7 @@ const createWindow = async (w: WindowConfig) => {
 }
 
 const initApi = (app: any) => {
-  // Api integration
+  // Window api
   app.ports.createWindow?.subscribe?.(createWindow)
 }
 

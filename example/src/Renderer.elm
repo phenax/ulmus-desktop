@@ -58,7 +58,11 @@ update msg model =
 
 
 updateFromMain : FromMainMsg -> Model -> ( Model, Cmd Msg )
-updateFromMain _ model =
+updateFromMain msg model =
+    let
+        _ =
+            Debug.log "msg" msg
+    in
     ( model, Cmd.none )
 
 

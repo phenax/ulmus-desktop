@@ -1,6 +1,7 @@
 module App exposing (..)
 
-import IPC exposing (FromMainMsg, FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
+import Http
+import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
 import Ulmus.Api.Window exposing (createWindow)
 import Ulmus.App
 import Ulmus.IPC exposing (send)
@@ -20,7 +21,7 @@ type alias Model =
 
 
 type Msg
-    = SendFrontendMsg FromMainMsg
+    = SendToRenderer FromMainMsg
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -31,7 +32,7 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SendFrontendMsg m ->
+        SendToRenderer m ->
             ( model, sendToRenderer m )
 
 
