@@ -13,7 +13,7 @@ export type Config = {
 }
 
 export const fetchConfig = async (cwd: string, currentSrc: string): Promise<Config> => {
-  const cfgPath = path.join(cwd, './ulmus-desktop.json')
+  const cfgPath = path.join(cwd, './ulmus.json')
 
   let file = ''
   try {
