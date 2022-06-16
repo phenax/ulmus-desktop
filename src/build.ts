@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import { bundle } from './utils/build'
 import { fetchConfig } from './utils/config'
 
-const main = async () => {
+export const build = async () => {
   const cwd = process.cwd()
   const appSrc = path.join(__dirname, 'app-src')
 
@@ -45,7 +45,3 @@ const main = async () => {
     copySrc('index.html', 'index.html'),
   ])
 }
-
-main()
-  .catch(e => (console.error(e), process.exit(1)))
-

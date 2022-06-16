@@ -3,7 +3,7 @@ import path from 'path'
 import { spawn } from 'child_process'
 import { fetchConfig } from './utils/config'
 
-export const main = async () => {
+export const run = async () => {
   const cwd = process.cwd()
   const config = await fetchConfig(cwd, __dirname)
 
@@ -12,8 +12,3 @@ export const main = async () => {
     stdio: 'inherit',
   })
 }
-
-main()
-  .catch(e => (console.error(e), process.exit(1)))
-
-
