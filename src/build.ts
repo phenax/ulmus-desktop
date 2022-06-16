@@ -34,7 +34,7 @@ export const build = async () => {
     bundle({
       cwd: config.root,
       entryPoint: path.join(appSrc, 'preload.ts'),
-      outdir: distRenderer,
+      outdir: dist,
     }),
   ])
 
