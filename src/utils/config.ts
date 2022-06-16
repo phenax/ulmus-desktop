@@ -7,6 +7,7 @@ export type Config = {
   paths: {
     main: string,
     renderer: string,
+    assetsDir?: string,
     'js:main'?: string,
     'js:renderer'?: string,
   },

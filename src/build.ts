@@ -43,5 +43,10 @@ export const build = async () => {
 
   await Promise.all([
     copySrc('index.html', 'index.html'),
+    config.paths.assetsDir && fs.cp(
+      path.join(appSrc, config.paths.assetsDir),
+      distRenderer,
+      { recursive: true, force: true },
+    ),
   ])
 }

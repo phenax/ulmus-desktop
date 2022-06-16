@@ -3,6 +3,7 @@
     "outdir": "dist",
     "paths": {
         "main": "src/App.elm",
-        "renderer": "src/Renderer.elm"
+        "renderer": "src/Renderer.elm",
+        "assetsDir": "assets"
     }
 }
