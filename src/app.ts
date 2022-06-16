@@ -31,8 +31,15 @@ const initProcess = async () => {
 
   await createWindow({ path: '/' })
 
-  ipcMain.on('to-main', (event: any, msg: any) => app.ports.receive.send(msg))
-  app.ports.send.subscribe((msg: any) => ipcMain.emit('from-main', msg))
+  ipcMain.on('to-main', (event: any, msg: any) => {
+    if (app.ports.receive) {
+      app.ports.receive.send(msg)
+    } else {
+      console.error('Main process is not listening for messages')
+    }
+  })
+
+  app.ports.send?.subscribe((msg: any) => ipcMain.emit('from-main', msg))
 };
 
 const initializeProtocol = () => {
