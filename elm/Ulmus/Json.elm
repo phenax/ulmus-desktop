@@ -3,17 +3,6 @@ module Ulmus.Json exposing (..)
 import Json.Decode
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Enc
-import Ulmus.Types exposing (..)
-
-
-decodeWindow : Json.Decode.Decoder Window
-decodeWindow =
-    Json.Decode.succeed Window |> required "path" Json.Decode.string
-
-
-encodeWindow : Window -> Enc.Value
-encodeWindow w =
-    Enc.object [ ( "path", Enc.string w.path ) ]
 
 
 decodeVariant : String -> Json.Decode.Decoder a -> Json.Decode.Decoder a

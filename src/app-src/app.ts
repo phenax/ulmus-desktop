@@ -22,6 +22,11 @@ const createWindow = async (w: WindowConfig) => {
   await mainWindow.loadURL(`${ORIGIN}/${w.path?.replace(/^\/*/g, '') || ''}`)
 }
 
+const initApi = (app: any) => {
+  // Api integration
+  app.ports.createWindow?.subscribe?.(createWindow)
+}
+
 const initProcess = async () => {
   const { Elm } = await import(process.env.MAIN as string)
   const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
@@ -29,8 +34,10 @@ const initProcess = async () => {
   const app = Main.init()
   console.log(app)
 
-  await createWindow({ path: '/' })
+  initApi(app)
 
+  // IPC messages
+  app.ports.send?.subscribe((msg: any) => ipcMain.emit('from-main', msg))
   ipcMain.on('to-main', (event: any, msg: any) => {
     if (app.ports.receive) {
       app.ports.receive.send(msg)
@@ -38,8 +45,6 @@ const initProcess = async () => {
       console.error('Main process is not listening for messages')
     }
   })
-
-  app.ports.send?.subscribe((msg: any) => ipcMain.emit('from-main', msg))
 };
 
 const initializeProtocol = () => {

@@ -5,7 +5,6 @@ import Browser.Navigation
 import Html
 import Json.Decode
 import Ulmus.IPC exposing (receive)
-import Ulmus.Types exposing (..)
 import Url
 
 

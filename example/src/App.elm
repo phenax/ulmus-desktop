@@ -1,6 +1,7 @@
 module App exposing (..)
 
 import IPC exposing (FromMainMsg, FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
+import Ulmus.Api.Window exposing (createWindow)
 import Ulmus.App
 import Ulmus.IPC exposing (send)
 
@@ -24,7 +25,7 @@ type Msg
 
 init : Flags -> ( Model, Cmd Msg )
 init _ =
-    ( (), Cmd.none )
+    ( (), createWindow { path = "/" } )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

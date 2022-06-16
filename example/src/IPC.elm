@@ -2,8 +2,8 @@ module IPC exposing (..)
 
 import Json.Decode exposing (oneOf)
 import Json.Encode as Enc
-import Ulmus.Json exposing (decodeVariant, decodeWindow, encodeVariant, encodeWindow)
-import Ulmus.Types exposing (Window)
+import Ulmus.Api.Window exposing (..)
+import Ulmus.Json exposing (decodeVariant, encodeVariant)
 
 
 type FromRendererMsg

@@ -1,12 +1,8 @@
-port module Ulmus.App exposing (..)
+module Ulmus.App exposing (..)
 
 import Json.Decode
 import Platform
 import Ulmus.IPC exposing (receive)
-import Ulmus.Types exposing (..)
-
-
-port createWindow : Window -> Cmd msg
 
 
 type Msg rmsg msg
