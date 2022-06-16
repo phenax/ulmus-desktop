@@ -4,19 +4,25 @@ import Browser exposing (Document)
 import Browser.Navigation as Navigation
 import Html
 import Html.Events exposing (onClick)
-import IPC exposing (FromMainMsg, FromRendererMsg(..), decodeMainMsg, encodeRendererMsg)
-import Json.Decode
-import Ulmus.IPC exposing (receive, send)
+import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeMainMsg, encodeRendererMsg)
+import Ulmus.IPC exposing (send)
 import Ulmus.Renderer
 import Url
 
 
-main : Program Flags Model Msg
+sendToMain : FromRendererMsg -> Cmd msg
+sendToMain =
+    send << encodeRendererMsg
+
+
+main : Ulmus.Renderer.Renderer Flags Model FromMainMsg Msg
 main =
     Ulmus.Renderer.makeRenderer
         { view = view
         , update = update
         , init = init
+        , decoder = decodeMainMsg
+        , updateFromMain = updateFromMain
         , subscriptions = subscriptions
         , onUrlRequest = \_ -> Noop
         , onUrlChange = \_ -> Noop
@@ -30,7 +36,6 @@ type alias Model =
 type Msg
     = Noop
     | SendToMain FromRendererMsg
-    | GotMainMsg (Result Json.Decode.Error FromMainMsg)
 
 
 type alias Flags =
@@ -46,10 +51,15 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SendToMain m ->
-            ( model, send <| encodeRendererMsg <| m )
+            ( model, sendToMain m )
 
         _ ->
             ( model, Cmd.none )
+
+
+updateFromMain : FromMainMsg -> Model -> ( Model, Cmd Msg )
+updateFromMain _ model =
+    ( model, Cmd.none )
 
 
 view : Model -> Document Msg
@@ -64,4 +74,4 @@ view _ =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    receive (GotMainMsg << Json.Decode.decodeValue decodeMainMsg)
+    Sub.none
