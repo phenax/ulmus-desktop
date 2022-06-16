@@ -1,11 +1,11 @@
 {
   "name": "ulmus-desktop",
   "version": "0.0.0",
-  "repository": "__",
+  "repository": "https://github.com/phenax/ulmus-deskktop",
   "author": "Akshay Nair <phenax5@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "ts-node scripts/build.ts",
+    "build": "ts-node --cwd example ../src/build.ts",
     "example": "electron ./example/dist/app.js",
     "test:elm": "elm-test tests/Elm/**/*.elm",
     "test:ts": "jest"
