@@ -1,0 +1,16 @@
+html, body {
+  background-color: #ddd;
+}
+
+html * {
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+  background-color: #5180c9;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5em 1em;
+}
+

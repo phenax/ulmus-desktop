@@ -40,11 +40,11 @@ export const build = async () => {
     }),
   ])
 
-  const copySrc = (from: string, to: string) =>
-    fs.copyFile(path.join(appSrc, from), path.join(distRenderer, to));
+  const copyToPublic = (from: string, to: string) =>
+    fs.copyFile(from, path.join(distRenderer, to));
 
   await Promise.all([
-    copySrc('index.html', 'index.html'),
+    copyToPublic(path.join(appSrc, config.paths.html || 'index.html'), 'index.html'),
     config.paths.assetsDir && fs.cp(
       path.join(appSrc, config.paths.assetsDir),
       distRenderer,

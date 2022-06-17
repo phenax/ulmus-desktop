@@ -8,6 +8,7 @@ export type Config = {
     main: string,
     renderer: string,
     assetsDir?: string,
+    html?: string,
     'js:main'?: string,
     'js:renderer'?: string,
   },
