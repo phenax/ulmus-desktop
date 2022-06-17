@@ -1,6 +1,5 @@
 module App exposing (..)
 
-import Http
 import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
 import Ulmus.Api.Window exposing (createWindow)
 import Ulmus.App
@@ -13,7 +12,7 @@ sendToRenderer =
 
 
 type alias Flags =
-    ()
+    { foobar : String }
 
 
 type alias Model =
@@ -25,7 +24,11 @@ type Msg
 
 
 init : Flags -> ( Model, Cmd Msg )
-init _ =
+init f =
+    let
+        _ =
+            Debug.log "flags" f
+    in
     ( (), createWindow { path = "/" } )
 
 

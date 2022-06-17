@@ -5,6 +5,7 @@
         "main": "src/App.elm",
         "renderer": "src/Renderer.elm",
         "assetsDir": "assets",
-        "js:main": "src/main.js"
+        "js:main": "src/main.js",
+        "js:renderer": "src/renderer.js"
     }
 }

@@ -3,6 +3,7 @@ import path from 'path'
 import { app, session, BrowserWindow, ipcMain } from 'electron'
 // @ts-ignore
 import XMLHttpRequest from 'xhr2'
+import { initElmModule } from 'src/utils/elm'
 
 // Polyfill for elm/http
 global.XMLHttpRequest = XMLHttpRequest
@@ -32,26 +33,8 @@ const initApi = (app: any) => {
   app.ports.createWindow?.subscribe?.(createWindow)
 }
 
-const getHooks = async () => {
-  const defaultHooks = { getFlags: () => ({}), setup() { } }
-
-  if (process.env.JS_MODULE) {
-    const jsMod = await import(process.env.JS_MODULE)
-    return { ...defaultHooks, ...jsMod.default }
-  }
-
-  return defaultHooks
-}
-
 const initProcess = async () => {
-  const hooks = await getHooks()
-
-  const { Elm } = await import(process.env.MAIN as string)
-  const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
-
-  const app = Main.init({
-    flags: await hooks.getFlags(),
-  })
+  const app = await initElmModule()
 
   initApi(app)
 
@@ -64,8 +47,6 @@ const initProcess = async () => {
       console.error('Main process is not listening for messages')
     }
   })
-
-  hooks.setup(app)
 };
 
 const initializeProtocol = () => {

@@ -30,6 +30,7 @@ export const build = async () => {
       outdir: distRenderer,
       define: {
         'process.env.MAIN': JSON.stringify(config.paths.renderer),
+        'process.env.JS_MODULE': JSON.stringify(config.paths['js:renderer'] || ''),
       },
     }),
     bundle({

@@ -5,6 +5,32 @@ import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Enc
 
 
+
+-- type Position
+--     = X Int
+--     | Y Int
+--     | Center
+--
+--
+-- type Target
+--     = Path String
+--     | Url String
+--
+--
+-- type Attribute
+--     = Width Int
+--     | Height Int
+--     | Position Position
+--     | NonResizable
+--     | Icon String
+--     | Frameless
+--     | Transparent
+--     | DisableDevtools
+--
+--
+-- createWindow (Path "/") [ Width 800, Height 600, Frameless ]
+
+
 type alias Window =
     { path : String }
 

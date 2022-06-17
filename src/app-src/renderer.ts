@@ -1,14 +1,10 @@
-const $root = document.createElement('div');
-document.body.appendChild($root);
+import { initElmModule } from "src/utils/elm";
 
-import(process.env.MAIN as string).then(async ({ Elm }) => {
-  const Main: any = Object.values(Elm).find((m: any) => typeof m.init === 'function')
+const main = async () => {
+  const $root = document.createElement('div');
+  document.body.appendChild($root);
 
-  if (!Main) {
-    throw new Error(`Invalid module. Expected elm module ${process.env.MAIN}`)
-  }
-
-  const app = Main.init({ node: $root });
+  const app = await initElmModule({ node: $root });
 
   const $ulmus: any = (window as any).$ulmus
   if ($ulmus) {
@@ -22,5 +18,6 @@ import(process.env.MAIN as string).then(async ({ Elm }) => {
 
     app.ports.send?.subscribe((msg: any) => $ulmus.send(msg))
   }
-})
+}
 
+main()
