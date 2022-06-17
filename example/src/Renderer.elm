@@ -39,7 +39,7 @@ type Msg
 
 
 type alias Flags =
-    { foobar : String }
+    ()
 
 
 init : Flags -> Url.Url -> Navigation.Key -> ( Model, Cmd Msg )
