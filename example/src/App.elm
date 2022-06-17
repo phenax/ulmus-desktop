@@ -1,12 +1,12 @@
 module App exposing (..)
 
-import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
-import Ulmus.Api.Window exposing (Attribute(..), WindowID, createWindow, onPageLoaded, onWindowClosed)
+import IPC exposing (ToMainMsg(..), ToRendererMsg(..), decodeRendererMsg, encodeMainMsg)
+import Ulmus.Api.Window exposing (Attribute(..), WindowID, createWindow, onWindowClosed, onWindowReadyToShow)
 import Ulmus.App
 import Ulmus.IPC exposing (sendMain)
 
 
-sendToRenderer : WindowID -> FromMainMsg -> Cmd msg
+sendToRenderer : WindowID -> ToRendererMsg -> Cmd msg
 sendToRenderer =
     sendMain encodeMainMsg
 
@@ -20,7 +20,7 @@ type alias Model =
 
 
 type Msg
-    = OnPageLoaded WindowID
+    = OnWindowReady WindowID
     | OnWindowClosed WindowID
 
 
@@ -40,14 +40,14 @@ update msg model =
             Debug.log "update" msg
     in
     case msg of
-        OnPageLoaded windowId ->
+        OnWindowReady windowId ->
             ( model, sendToRenderer windowId NoopMain )
 
         _ ->
             ( model, Cmd.none )
 
 
-updateFromRenderer : ( WindowID, FromRendererMsg ) -> Model -> ( Model, Cmd Msg )
+updateFromRenderer : ( WindowID, ToMainMsg ) -> Model -> ( Model, Cmd Msg )
 updateFromRenderer ( windowId, rmsg ) model =
     case rmsg of
         LogMessage x ->
@@ -65,11 +65,11 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
         [ onWindowClosed OnWindowClosed
-        , onPageLoaded OnPageLoaded
+        , onWindowReadyToShow OnWindowReady
         ]
 
 
-main : Ulmus.App.MainApp Flags Model FromRendererMsg Msg
+main : Ulmus.App.MainApp Flags Model ToMainMsg Msg
 main =
     Ulmus.App.makeApp
         { init = init

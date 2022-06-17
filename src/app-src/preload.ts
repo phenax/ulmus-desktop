@@ -13,6 +13,5 @@ contextBridge.exposeInMainWorld('$ulmus', {
   send: debug("to main", (msg: any) => ipcRenderer.send('to-main', msg)),
   receive: (fn: (msg: any) => void) =>
     ipcRenderer.on('from-main', debug('from-main', (_ev: any, m: any) => fn(m))),
-  pageLoaded: debug('page-loaded', () => ipcRenderer.send('page-loaded')),
 })
 

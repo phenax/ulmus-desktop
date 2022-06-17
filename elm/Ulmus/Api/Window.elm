@@ -117,6 +117,3 @@ port onBeforeWindowClose : (WindowID -> msg) -> Sub msg
 
 
 port onWindowClosed : (WindowID -> msg) -> Sub msg
-
-
-port onPageLoaded : (WindowID -> msg) -> Sub msg

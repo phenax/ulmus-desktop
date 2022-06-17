@@ -18,8 +18,6 @@ const main = async () => {
 
   if ($ulmus)
     app.ports.send?.subscribe((msg: any) => $ulmus.send(msg))
-
-  $ulmus?.pageLoaded()
 }
 
 main()

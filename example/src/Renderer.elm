@@ -4,13 +4,13 @@ import Browser exposing (Document)
 import Browser.Navigation as Navigation
 import Html
 import Html.Events exposing (onClick)
-import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeMainMsg, encodeRendererMsg)
+import IPC exposing (ToMainMsg(..), ToRendererMsg(..), decodeMainMsg, encodeRendererMsg)
 import Ulmus.IPC exposing (send)
 import Ulmus.Renderer
 import Url
 
 
-sendToMain : FromRendererMsg -> Cmd msg
+sendToMain : ToMainMsg -> Cmd msg
 sendToMain =
     send << encodeRendererMsg
 
@@ -21,7 +21,7 @@ type alias Model =
 
 type Msg
     = Noop
-    | SendToMain FromRendererMsg
+    | SendToMain ToMainMsg
 
 
 type alias Flags =
@@ -43,7 +43,7 @@ update msg model =
             ( model, Cmd.none )
 
 
-updateFromMain : FromMainMsg -> Model -> ( Model, Cmd Msg )
+updateFromMain : ToRendererMsg -> Model -> ( Model, Cmd Msg )
 updateFromMain msg model =
     let
         _ =
@@ -67,7 +67,7 @@ subscriptions _ =
     Sub.none
 
 
-main : Ulmus.Renderer.Renderer Flags Model FromMainMsg Msg
+main : Ulmus.Renderer.Renderer Flags Model ToRendererMsg Msg
 main =
     Ulmus.Renderer.makeRenderer
         { view = view

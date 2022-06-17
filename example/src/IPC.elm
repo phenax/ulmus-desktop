@@ -6,16 +6,16 @@ import Ulmus.Api.Window exposing (..)
 import Ulmus.Json exposing (decodeVariant, encodeVariant)
 
 
-type FromRendererMsg
+type ToMainMsg
     = OpenInWindow Window
     | LogMessage String
 
 
-type FromMainMsg
+type ToRendererMsg
     = NoopMain
 
 
-encodeRendererMsg : FromRendererMsg -> Enc.Value
+encodeRendererMsg : ToMainMsg -> Enc.Value
 encodeRendererMsg msg =
     case msg of
         LogMessage text ->
@@ -25,7 +25,7 @@ encodeRendererMsg msg =
             encodeVariant "OpenInWindow" <| Enc.object [ ( "window", encodeWindow window ) ]
 
 
-decodeRendererMsg : Json.Decode.Decoder FromRendererMsg
+decodeRendererMsg : Json.Decode.Decoder ToMainMsg
 decodeRendererMsg =
     oneOf
         [ decodeVariant "LogMessage" <|
@@ -37,7 +37,7 @@ decodeRendererMsg =
         ]
 
 
-decodeMainMsg : Json.Decode.Decoder FromMainMsg
+decodeMainMsg : Json.Decode.Decoder ToRendererMsg
 decodeMainMsg =
     oneOf
         [ decodeVariant "Foobar" <|
@@ -45,7 +45,7 @@ decodeMainMsg =
         ]
 
 
-encodeMainMsg : FromMainMsg -> Enc.Value
+encodeMainMsg : ToRendererMsg -> Enc.Value
 encodeMainMsg msg =
     case msg of
         NoopMain ->

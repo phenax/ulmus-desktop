@@ -112,20 +112,6 @@ const initProcess = async () => {
     }
   })
 
-  // Event for page load
-  if (app.ports.onPageLoaded) {
-    ipcMain.on('page-loaded', (event: IpcMainEvent) => {
-      const win = BrowserWindow.fromWebContents(event.sender)
-      if (!win) return
-
-      const windowId = windowIdMap.get(win.id)
-
-      if (windowId) {
-        app.ports.onPageLoaded.send(windowId)
-      }
-    })
-  }
-
   // IPC messages
   app.ports.send?.subscribe(([windowId, msg]: any) => {
     const window = globalWindowMap.get(windowId)
