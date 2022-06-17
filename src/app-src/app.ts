@@ -96,6 +96,8 @@ const createWindow = (app: App) => async (config: WindowConfig) => {
   }
 
   await win.loadURL(`${ORIGIN}/${config.path?.replace(/^\/*/g, '') || ''}`)
+
+  win.webContents.openDevTools()
 }
 
 const initProcess = async () => {
@@ -110,16 +112,33 @@ const initProcess = async () => {
     }
   })
 
+  // Event for page load
+  if (app.ports.onPageLoaded) {
+    ipcMain.on('page-loaded', (event: IpcMainEvent) => {
+      const win = BrowserWindow.fromWebContents(event.sender)
+      if (!win) return
+
+      const windowId = windowIdMap.get(win.id)
+
+      if (windowId) {
+        app.ports.onPageLoaded.send(windowId)
+      }
+    })
+  }
+
   // IPC messages
-  app.ports.send?.subscribe((msg: any) => ipcMain.emit('from-main', msg))
+  app.ports.send?.subscribe(([windowId, msg]: any) => {
+    const window = globalWindowMap.get(windowId)
+    window?.webContents.send('from-main', msg)
+  })
   ipcMain.on('to-main', (event: IpcMainEvent, msg: any) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (!win) return
 
-    // TODO: Send window id along with message
-    // const id = windowIdMap.get(win.id)
+    const windowId = windowIdMap.get(win.id)
+
     if (app.ports.receive) {
-      app.ports.receive.send(msg)
+      app.ports.receive.send([windowId, msg])
     } else {
       console.error('Main process is not listening for messages')
     }

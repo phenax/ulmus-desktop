@@ -2,11 +2,12 @@ module Ulmus.App exposing (..)
 
 import Json.Decode
 import Platform
-import Ulmus.IPC exposing (receive)
+import Ulmus.Api.Window exposing (WindowID)
+import Ulmus.IPC exposing (receiveMain)
 
 
 type Msg rmsg msg
-    = GotRendererMsg (Result Json.Decode.Error rmsg)
+    = GotRendererMsg (Result Json.Decode.Error ( WindowID, rmsg ))
     | AppMsg msg
 
 
@@ -22,7 +23,7 @@ toAppUpdate =
 makeApp :
     { init : flags -> ( model, Cmd msg )
     , update : msg -> model -> ( model, Cmd msg )
-    , updateFromRenderer : rmsg -> model -> ( model, Cmd msg )
+    , updateFromRenderer : ( WindowID, rmsg ) -> model -> ( model, Cmd msg )
     , decoder : Json.Decode.Decoder rmsg
     , subscriptions : model -> Sub msg
     }
@@ -38,7 +39,11 @@ makeApp { init, update, updateFromRenderer, decoder, subscriptions } =
                             Ok m ->
                                 updateFromRenderer m model |> toAppUpdate
 
-                            _ ->
+                            Err err ->
+                                let
+                                    _ =
+                                        Debug.log "[DecodeError]" err
+                                in
                                 ( model, Cmd.none )
 
                     AppMsg m ->
@@ -47,6 +52,6 @@ makeApp { init, update, updateFromRenderer, decoder, subscriptions } =
             \model ->
                 Sub.batch
                     [ subscriptions model |> Sub.map AppMsg
-                    , receive (Json.Decode.decodeValue decoder) |> Sub.map GotRendererMsg
+                    , receiveMain decoder GotRendererMsg
                     ]
         }

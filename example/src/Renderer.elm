@@ -15,20 +15,6 @@ sendToMain =
     send << encodeRendererMsg
 
 
-main : Ulmus.Renderer.Renderer Flags Model FromMainMsg Msg
-main =
-    Ulmus.Renderer.makeRenderer
-        { view = view
-        , update = update
-        , init = init
-        , decoder = decodeMainMsg
-        , updateFromMain = updateFromMain
-        , subscriptions = subscriptions
-        , onUrlRequest = \_ -> Noop
-        , onUrlChange = \_ -> Noop
-        }
-
-
 type alias Model =
     ()
 
@@ -43,11 +29,7 @@ type alias Flags =
 
 
 init : Flags -> Url.Url -> Navigation.Key -> ( Model, Cmd Msg )
-init f _ _ =
-    let
-        _ =
-            Debug.log "flags" f
-    in
+init _ _ _ =
     ( (), Cmd.none )
 
 
@@ -83,3 +65,17 @@ view _ =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
+
+
+main : Ulmus.Renderer.Renderer Flags Model FromMainMsg Msg
+main =
+    Ulmus.Renderer.makeRenderer
+        { view = view
+        , update = update
+        , init = init
+        , decoder = decodeMainMsg
+        , updateFromMain = updateFromMain
+        , subscriptions = subscriptions
+        , onUrlRequest = \_ -> Noop
+        , onUrlChange = \_ -> Noop
+        }

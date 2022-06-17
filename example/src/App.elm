@@ -1,14 +1,14 @@
 module App exposing (..)
 
 import IPC exposing (FromMainMsg(..), FromRendererMsg(..), decodeRendererMsg, encodeMainMsg)
-import Ulmus.Api.Window exposing (Attribute(..), WindowID, createWindow, onWindowClosed, onWindowReadyToShow)
+import Ulmus.Api.Window exposing (Attribute(..), WindowID, createWindow, onPageLoaded, onWindowClosed)
 import Ulmus.App
-import Ulmus.IPC exposing (send)
+import Ulmus.IPC exposing (sendMain)
 
 
-sendToRenderer : FromMainMsg -> Cmd msg
+sendToRenderer : WindowID -> FromMainMsg -> Cmd msg
 sendToRenderer =
-    send << encodeMainMsg
+    sendMain encodeMainMsg
 
 
 type alias Flags =
@@ -16,12 +16,11 @@ type alias Flags =
 
 
 type alias Model =
-    { windows : List WindowID }
+    ()
 
 
 type Msg
-    = SendToRenderer FromMainMsg
-    | OnWindowReadyToShow WindowID
+    = OnPageLoaded WindowID
     | OnWindowClosed WindowID
 
 
@@ -30,37 +29,31 @@ init f =
     let
         _ =
             Debug.log "flags" f
-
-        windowId =
-            "main"
-
-        windowAttrs =
-            [ Frameless, DisableDevtools ]
     in
-    ( { windows = [ windowId ] }, createWindow windowId "/" windowAttrs )
+    ( (), createWindow "main" "/" [] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        _ =
+            Debug.log "update" msg
+    in
     case msg of
-        SendToRenderer m ->
-            ( model, sendToRenderer m )
+        OnPageLoaded windowId ->
+            ( model, sendToRenderer windowId NoopMain )
 
         _ ->
-            let
-                _ =
-                    Debug.log "update" msg
-            in
             ( model, Cmd.none )
 
 
-updateFromRenderer : FromRendererMsg -> Model -> ( Model, Cmd Msg )
-updateFromRenderer rmsg model =
+updateFromRenderer : ( WindowID, FromRendererMsg ) -> Model -> ( Model, Cmd Msg )
+updateFromRenderer ( windowId, rmsg ) model =
     case rmsg of
         LogMessage x ->
             let
                 _ =
-                    Debug.log "[DEBUG]" x
+                    Debug.log "Loging " ( windowId, x )
             in
             ( model, Cmd.none )
 
@@ -72,7 +65,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
         [ onWindowClosed OnWindowClosed
-        , onWindowReadyToShow OnWindowReadyToShow
+        , onPageLoaded OnPageLoaded
         ]
 
 
