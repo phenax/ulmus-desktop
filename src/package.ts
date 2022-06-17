@@ -3,16 +3,16 @@ import { fetchConfig } from './utils/config'
 
 export const packageApp = async () => {
   const cwd = process.cwd()
-  const config = await fetchConfig(cwd, __dirname)
-  const dist = config.outdir
+  const { outdir } = await fetchConfig(cwd, __dirname)
 
   const pkgs = await electronPackager({
-    dir: dist,
-    out: './dist-package',
+    dir: outdir.app,
+    out: outdir.packageOutput,
     asar: true,
     overwrite: true,
     // platform: [],
     // icon: '',
   })
+
   console.log(pkgs)
 }

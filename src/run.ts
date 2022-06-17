@@ -5,9 +5,9 @@ import { fetchConfig } from './utils/config'
 
 export const run = async () => {
   const cwd = process.cwd()
-  const config = await fetchConfig(cwd, __dirname)
+  const { outdir } = await fetchConfig(cwd, __dirname)
 
-  spawn(pathToElectron as unknown as string, [path.join(config.outdir, 'app.js')], {
+  spawn(pathToElectron as unknown as string, [path.join(outdir.app, 'app.js')], {
     cwd,
     stdio: 'inherit',
   })

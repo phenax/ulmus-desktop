@@ -14,7 +14,16 @@ export type Config = {
   },
 }
 
-export const fetchConfig = async (cwd: string, currentSrc: string): Promise<Config> => {
+type InternalConfig = {
+  config: Config,
+  outdir: {
+    app: string,
+    renderer: string,
+    packageOutput: string,
+  },
+}
+
+export const fetchConfig = async (cwd: string, currentSrc: string): Promise<InternalConfig> => {
   const cfgPath = path.join(cwd, './ulmus.json')
 
   let file = ''
@@ -51,6 +60,13 @@ export const fetchConfig = async (cwd: string, currentSrc: string): Promise<Conf
       ])
   ) as Config['paths']
 
-  return cfg
+  return {
+    config: cfg,
+    outdir: {
+      app: path.join(cfg.outdir, 'app'),
+      renderer: path.join(cfg.outdir, 'app/renderer'),
+      packageOutput: path.join(cfg.outdir, 'package-out'),
+    },
+  }
 }
 

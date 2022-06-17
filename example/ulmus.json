@@ -4,7 +4,7 @@
     "paths": {
         "main": "src/App.elm",
         "renderer": "src/Renderer.elm",
-        "assetsDir": "assets",
+        "assetsDir": "public",
         "js:main": "src/main.js",
         "html": "src/index.html"
     }
