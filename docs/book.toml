@@ -1,0 +1,15 @@
+[book]
+authors = ["Akshay Nair"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Getting started - Ulmus Desktop"
+site-url = "https://phenax.github.io/ulmus-desktop"
+
+[output.html]
+git-repository-url = "https://github.com/phenax/ulmus-desktop"
+edit-url-template = "https://github.com/phenax/ulmus-desktop/edit/main/docs/{path}"
+
+[output.html.fold]
+enable = true
+
