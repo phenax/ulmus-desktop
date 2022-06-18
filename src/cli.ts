@@ -5,20 +5,21 @@ import { build } from './build'
 import { run } from './run'
 import { packageApp } from './package'
 
-const runApp = async () => {
-  await build()
+const runApp = async (args: any) => {
+  await build({ devMode: !args.disableDev, optimized: args.disableDev })
   await run()
+  process.exit(0)
 }
 
 const createPackage = async () => {
-  await build()
+  await build({ optimized: true, devMode: false })
   await packageApp()
 }
 
 yargs
   .command('run', 'Build and run you app', {
-    optimized: {
-      description: 'Run an optimized build',
+    'disable-dev': {
+      description: 'Disable development mode and run with optimized build',
       type: 'boolean',
       default: false,
     },

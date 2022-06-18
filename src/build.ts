@@ -4,7 +4,12 @@ import { bundle } from './utils/build'
 import { fetchConfig } from './utils/config'
 import { pick } from 'ramda'
 
-export const build = async () => {
+type Options = {
+  devMode?: boolean,
+  optimized?: boolean,
+}
+
+export const build = async ({ devMode = false, optimized = false }: Options) => {
   const cwd = process.cwd()
   const appSrc = path.join(__dirname, 'app-src')
 
@@ -22,6 +27,8 @@ export const build = async () => {
         'process.env.PUBLIC_DIR': JSON.stringify(outdir.renderer),
         'process.env.JS_MODULE': JSON.stringify(config.paths['js:main'] || ''),
       },
+      devMode,
+      optimized,
     }),
     bundle({
       entryPoint: path.join(appSrc, 'renderer.ts'),
@@ -31,11 +38,15 @@ export const build = async () => {
         'process.env.MAIN': JSON.stringify(config.paths.renderer),
         'process.env.JS_MODULE': JSON.stringify(config.paths['js:renderer'] || ''),
       },
+      devMode,
+      optimized,
     }),
     bundle({
-      cwd: config.root,
       entryPoint: path.join(appSrc, 'preload.ts'),
+      cwd: config.root,
       outdir: outdir.app,
+      devMode,
+      optimized,
     }),
   ])
 

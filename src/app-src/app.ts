@@ -6,6 +6,19 @@ import XMLHttpRequest from 'xhr2'
 import { initElmModule } from 'src/utils/elm'
 import { mergeDeepRight } from 'ramda'
 
+if (process.env.ELECTRON_IS_DEV) {
+  console.log('Ready to reload on changes...')
+  // To force dev mode
+  Object.assign(process.env, { ELECTRON_IS_DEV: process.env.ELECTRON_IS_DEV })
+
+  try {
+    require('electron-reloader')(module, {
+      watchRenderer: true,
+      debug: false,
+    })
+  } catch { }
+}
+
 // Polyfill for elm/http
 global.XMLHttpRequest = XMLHttpRequest
 

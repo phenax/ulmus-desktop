@@ -1,5 +1,5 @@
 
-example:
+run-example:
 	cd example && yarn start
 
 docs-serve:
