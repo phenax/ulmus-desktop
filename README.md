@@ -1,4 +1,4 @@
-# Ulmus Desktop
+# Ulmus Desktop [WIP]
 
 A framework for building cross-platform desktop applications entirely in Elm! It uses electron under the hood.
 
