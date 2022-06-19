@@ -1,4 +1,4 @@
-import { initElmModule } from "src/utils/elm";
+import { initElmModule } from "ts/utils/elm";
 
 const $ulmus: any = (window as any).$ulmus
 

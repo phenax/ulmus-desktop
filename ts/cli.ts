@@ -21,7 +21,6 @@ const runApp = command(async (args: { disableDev: boolean }) => {
 })
 
 const createPackage = command(async ({ platform }: any) => {
-  console.log(platform)
   await build({ optimized: true, devMode: false })
   await packageApp({ platform })
 })

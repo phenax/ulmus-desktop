@@ -10,7 +10,7 @@
     "test:ts": "jest"
   },
   "bin": {
-    "ulmus": "./src/cli.ts"
+    "ulmus": "./ts/cli.ts"
   },
   "dependencies": {
     "@types/ramda": "^0.28.14",

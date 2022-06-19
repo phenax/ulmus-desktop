@@ -3,7 +3,7 @@ import path from 'path'
 import { app, session, BrowserWindow, ipcMain, IpcMainEvent, BrowserWindowConstructorOptions } from 'electron'
 // @ts-ignore
 import XMLHttpRequest from 'xhr2'
-import { initElmModule } from 'src/utils/elm'
+import { initElmModule } from 'ts/utils/elm'
 import { mergeDeepRight } from 'ramda'
 
 if (process.env.ELECTRON_IS_DEV) {
