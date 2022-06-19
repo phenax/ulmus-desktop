@@ -1,5 +1,6 @@
 {
   "name": "ulmus-desktop",
+  "description": "A framework for building cross-platform desktop applications entirely in Elm",
   "version": "0.0.0",
   "repository": "https://github.com/phenax/ulmus-deskktop",
   "author": "Akshay Nair <phenax5@gmail.com>",
