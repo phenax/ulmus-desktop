@@ -5,16 +5,26 @@ import { build } from './build'
 import { run } from './run'
 import { packageApp } from './package'
 
-const runApp = async (args: any) => {
-  await build({ devMode: !args.disableDev, optimized: args.disableDev })
-  await run()
-  process.exit(0)
+const command = <T>(fn: (a: T) => Promise<void>) => async (a: T) => {
+  try {
+    await fn(a)
+    process.exit(0)
+  } catch (e) {
+    console.error(e)
+    process.exit(1)
+  }
 }
 
-const createPackage = async () => {
+const runApp = command(async (args: { disableDev: boolean }) => {
+  await build({ devMode: !args.disableDev, optimized: args.disableDev })
+  await run()
+})
+
+const createPackage = command(async ({ platform }: any) => {
+  console.log(platform)
   await build({ optimized: true, devMode: false })
-  await packageApp()
-}
+  await packageApp({ platform })
+})
 
 yargs
   .command('run', 'Build and run you app', {
@@ -26,8 +36,10 @@ yargs
   }, runApp)
   .command('bundle', 'Build and package your app', {
     platform: {
-      description: 'Platforms to build for - linux, win32, darwin',
+      description: 'Platforms to build',
+      choices: ['linux', 'win32', 'darwin'],
       type: 'array',
+      defaultDescription: 'host platform'
     },
   }, createPackage)
   .help()

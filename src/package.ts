@@ -1,7 +1,7 @@
 import electronPackager from 'electron-packager'
 import { fetchConfig } from './utils/config'
 
-export const packageApp = async () => {
+export const packageApp = async ({ platform }: { platform: string[] }) => {
   const cwd = process.cwd()
   const { outdir } = await fetchConfig(cwd, __dirname)
 
@@ -10,7 +10,7 @@ export const packageApp = async () => {
     out: outdir.packageOutput,
     asar: true,
     overwrite: true,
-    // platform: [],
+    ...(platform?.length > 0 ? { platform } : {})
     // icon: '',
   })
 
